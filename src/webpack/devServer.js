@@ -109,9 +109,12 @@ ${chalk.grey.bold('-------------------------------------------------------')}
   });
 
   app.get('/screenshot/:target', (req, res) => {
-    const name = req.params.target;
+		const name = req.params.target;
 		const location = path.join(__dirname, '../tempfolder', 'screenshot.png');
-    const result = settingsList.find(val => getNameFromSettings(val) === name);
+
+    const result = settingsList.find(val => {
+		 	return getNameFromLocation(val.location) === name
+		});
 
     const data = {
       config: {},
@@ -133,7 +136,9 @@ ${chalk.grey.bold('-------------------------------------------------------')}
         width: result.data.settings.size.width,
         height: result.data.settings.size.height,
       };
-    }
+		}
+
+		data.selector = '.banner';
 
     screenshot
       .fromUrl(data)
