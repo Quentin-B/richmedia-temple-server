@@ -57,10 +57,6 @@ ${chalk.grey.bold('-------------------------------------------------------')}
 
     const compiler = webpack(config);
 
-    console.log('----------------------');
-    console.log(` ${name} `);
-    console.log(config.output.publicPath);
-
     app.use(
       webpackDevMiddleware(compiler, {
         noInfo: true,
@@ -109,12 +105,15 @@ ${chalk.grey.bold('-------------------------------------------------------')}
   });
 
   app.get('/screenshot/:target', (req, res) => {
-		const name = req.params.target;
-		const location = path.join(__dirname, '../tempfolder', 'screenshot.png');
+    const name = req.params.target;
 
-    const result = settingsList.find(val => {
-		 	return getNameFromLocation(val.location) === name
-		});
+    const folder = path.join(process.cwd(), 'tmpFolder');
+    if (!fs.existsSync(folder)){
+      fs.mkdirSync(folder);
+    }
+
+    const location = path.join(folder, 'screenshot.png');
+    const result = settingsList.find(val => getNameFromLocation(val.location) === name);
 
     const data = {
       config: {},

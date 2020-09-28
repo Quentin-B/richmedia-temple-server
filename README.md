@@ -4,8 +4,6 @@ Richmedia Temple Server is used as a tool to build and develop richmedia units.
 
 See documentation https://assets-at-scale.gitbook.io/temple-suite/
 
-
-
 ## Installation
 
 ```sh
@@ -20,13 +18,10 @@ npm i -S @mediamonks/richmedia-temple-server
 
 ```js
 // for building
-node ./node_modules/@mediamonks/richmedia-temple-server/build.js
+rds-build
 
 // for developing
-node ./node_modules/@mediamonks/richmedia-temple-server/dev.js
-
-// for client preview
-node ./node_modules/@mediamonks/richmedia-temple-server/preview.js
+rds-dev
 ```
 
 
