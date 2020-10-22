@@ -3,6 +3,7 @@ const { prompt } = require('inquirer');
 const path = require('path');
 const fs = require('fs');
 const chalk = require('chalk');
+const base64 = require('./base64');
 
 module.exports = async function saveChoicesInPackageJson(type, {
   glob,
@@ -21,6 +22,7 @@ module.exports = async function saveChoicesInPackageJson(type, {
   let result = await prompt({
     type: 'confirm',
     name: 'saveSettings',
+    default: false,
     message: `save this as a separate command in package.json`,
   });
 
@@ -36,7 +38,7 @@ module.exports = async function saveChoicesInPackageJson(type, {
 No special chars, spaces, dashes just a single word.`,
       validate: function (value) {
         var pass = value.match(
-          /^[a-zA-Z\d]+$/g
+          /^[a-zA-Z\d_]+$/g
         );
         if (pass) {
           if(scripts[`${type}:${value}`]){
@@ -51,8 +53,8 @@ No special chars, spaces, dashes just a single word.`,
     },);
 
     const command = [`rds-${type}`];
-    command.push(`--glob '${glob}'`);
-    command.push(`--choices '${JSON.stringify(choices)}'`);
+    command.push(`--glob ${glob}`);
+    command.push(`--choices ${base64.encode(JSON.stringify(choices))}`);
 
     if(stats){
       command.push(`--stats`)

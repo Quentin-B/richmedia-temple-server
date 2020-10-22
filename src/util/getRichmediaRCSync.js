@@ -10,10 +10,6 @@ const leafs = require("./leafs");
 const isFile = require("./isFile");
 const {readJson} = require("fs-extra");
 
-
-
-
-
 /**
  * getJSONConfig retrieves a jsonConfig config file and will
  * also inherit configs from parent jsonConfig files
@@ -21,14 +17,15 @@ const {readJson} = require("fs-extra");
  * @param {string} filepath
  * @return {Promise<void | never>}
  */
-module.exports = async function getRichmediaRC(
-  filepath,
+module.exports = function getRichmediaRCSync(
+  filepath, onDependecy = () => {}
 ) {
 
   filepath = path.resolve(filepath);
+  onDependecy(filepath);
   const dirname = path.dirname(filepath);
 
-  let richmediarc = await readJson(filepath);
+  let richmediarc = JSON.parse(fs.readFileSync(filepath, 'utf-8'));
 
   leafs(richmediarc, function(value, obj, name){
 
@@ -42,7 +39,7 @@ module.exports = async function getRichmediaRC(
 
   let {parent} = richmediarc;
   if(parent){
-    richmediarc = deepmerge(await getRichmediaRC(parent), richmediarc)
+    richmediarc = deepmerge(getRichmediaRCSync(parent), richmediarc)
     delete richmediarc.parent;
   }
 
